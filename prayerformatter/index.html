@@ -53,7 +53,7 @@
 
         <div class="row">
 
-          <div class="col-lg-5 d-flex align-items-stretch">
+          <div class="col-lg-4 d-flex align-items-stretch">
             <div class="info">
               <div class="address">
                 <i class="bi bi-book"></i>
@@ -70,22 +70,28 @@
 
           </div>
 
-          <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch">
-            <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+          <div class="col-lg-8 mt-5 mt-lg-0 d-flex align-items-stretch">
+            <form onsubmit="return false;" id="formatForm" role="form" class="php-email-form">
               <div class="form-group">
                 <label for="name"><b>Paste Scripture</b></label>
-                <textarea class="form-control" name="message" id="inputText" rows="10" required></textarea>
+                <textarea class="form-control" name="message" id="inputText" rows="10"></textarea>
               </div>
               <div class="my-3">
                 <div class="loading">Loading</div>
                 <div class="error-message"></div>
                 <div class="sent-message">Your message has been sent. Thank you!</div>
               </div>
-              <div class="text-center"><button type="submit">Format</button></div>
+              <!-- <div class="text-center"><button type="submit">Format</button></div> -->
 
               <div class="form-group">
-                <label for="name"><b>Formatted Scripture</b></label>
-                <textarea class="form-control" readonly id="formattedText" name="message" rows="10" required></textarea>
+                <div class="row" style="justify-content: space-between;">
+                  <label style="width: 400px;" for="name"><b>Formatted Scripture</b></label>
+                  <div style=" width: 100px;">
+                    <button type="submit" style="height: 30px; width: 80px; padding: 0.0; "> <i
+                        class="ri-file-copy-line"></i> Copy</button>
+                  </div>
+                </div>
+                <p class="form-control" id="formattedText"></p>
               </div>
             </form>
           </div>
@@ -96,6 +102,8 @@
     </section><!-- End Contact Section -->
 
   </main><!-- End #main -->
+
+
 
   <div id="preloader"></div>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
@@ -108,7 +116,6 @@
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
   <!-- Template Main JS File -->
@@ -120,23 +127,63 @@
 
   $(document).ready(function () {
 
-
     $('#inputText').on('input', function (e) {
 
-      var inputString =  e.target.value;
+      var inputString = e.target.value;
 
       var bracketIndex = inputString.indexOf(')');
 
-      var mainScripture = inputString.substr(bracketIndex+1);
+      var mainScripture = inputString.substr(bracketIndex + 1);
 
-      var bibleRef = inputString.substr(0, bracketIndex +1);
+      var bibleRef = inputString.substr(0, bracketIndex + 1);
 
-      $('#formattedText').val("SCRIPTURE: " + "\""+mainScripture.trim() + "\"" + " - " + bibleRef);
+      var firstLine = inputString.split('\n')[0];
+      mainScripture = inputString.split('\n')[1];
 
-      console.log(e.target.value);
+      mainScripture = mainScripture.replace("\"", "");
+
+      let finalMainScripture = mainScripture.replace(/[“”‘’]/g, '');
+
+      finalMainScripture = finalMainScripture.trim();
+
+
+      const finalOutput = "SCRIPTURE: " + "\"" + finalMainScripture.trim() + "\"" + " - " + firstLine;
+
+      var bracketIndex = inputString.indexOf('.');
+
+      const myArray = finalOutput.split(".");
+
+      if (myArray.length > 1) {
+        for (let i = 0; i < myArray.length - 1; i++) {
+
+          if ((myArray[i].length + myArray[i + 1].length) > 200) {
+
+          }
+        }
+      }
+
+      console.log("index of fullstop = " + bracketIndex);
+      console.log("array length " + myArray.length);
+
+      console.log("length " + finalOutput.length);
+
+      $('#formattedText').text(finalOutput);
     })
 
+    $('#formatForm').on('submit', function (e) {
+
+      e.preventDefault();
+
+      var formattedText = $('#formattedText').text();
+
+      console.log(formattedText);
+
+      navigator.clipboard.writeText(formattedText);
+
+    });
   })
+
+
 
 </script>
 
