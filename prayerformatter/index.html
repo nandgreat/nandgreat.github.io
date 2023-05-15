@@ -204,7 +204,14 @@
 
         if (index % 2 == 0) {
           text = element + "...";
-        } else text = "SCRIPTURE: ..." + element;
+        } else {
+          if (type == "scripture") {
+            text = "SCRIPTURE: ..." + element;
+          }else{
+            text = "PRAYER: ..." + element;
+
+          }
+        }
 
         appendCopyBtn(text);
 
