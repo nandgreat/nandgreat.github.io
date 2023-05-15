@@ -40,6 +40,24 @@
 </head>
 
 <body>
+  <style>
+    .tabStyle {
+      padding-top: 10px;
+      padding-left: 10px
+    }
+
+    .activeTab {
+      background-color: #47b2e4;
+    }
+
+    .activeTab a {
+      color: white;
+    }
+
+    .activeTab p {
+      color: white !important;
+    }
+  </style>
 
   <main id="main">
 
@@ -54,14 +72,14 @@
         <div class="row">
 
           <div class="col-lg-4 d-flex align-items-stretch">
-            <div class="info">
-              <div class="address">
+            <div class="info" style="padding-left: 0; padding-right: 0;">
+              <div class="address tabStyle activeTab">
                 <i class="bi bi-book"></i>
                 <h4><a href="#" id="scriptureLink">SCRIPTURE</a></h4>
                 <p>Format scripture to COZA standard</p>
               </div>
 
-              <div class="email">
+              <div class="email tabStyle">
                 <i class="bi bi-book"></i>
                 <h4><a href="#" id="prayerLink">PRAYER</a></h4>
                 <p>Format Prayers to COZA Standard </p>
@@ -133,22 +151,29 @@
 
     $('#scriptureLink').on('click', function () {
       type = 'scripture';
+      clearAllFields();
+      $('.email').removeClass('activeTab');
+      $('.address').addClass('activeTab');
+
       $('#typeLabel').text('Paste Scripture')
     })
 
     $('#prayerLink').on('click', function () {
       type = 'prayer';
+      clearAllFields();
+      $('.email').addClass('activeTab');
+      $('.address').removeClass('activeTab');
       $('#typeLabel').text('Paste Prayer')
 
     })
 
     $('#inputText').on('input', function (e) {
 
+      clearOnlyFormatedFields();
+
       var inputString = e.target.value;
 
       var mainScripture = inputString;
-
-      console.log(mainScripture);
 
       if (type == "scripture") {
 
@@ -163,9 +188,8 @@
 
       }
 
-      console.log(mainScripture);
       if (mainScripture == undefined) {
-        clearFields();
+        clearAllFields();
       };
 
       mainScripture = mainScripture.replace("\"", "");
@@ -179,6 +203,10 @@
       } else {
         finalOutput = "PRAYER: " + "\"" + finalMainScripture.trim() + "\"";
       }
+
+      finalOutput = cleanPrayerText(finalOutput);
+
+      console.log(finalOutput);
 
       var bracketIndex = inputString.indexOf('.');
 
@@ -227,19 +255,24 @@
 
       var formattedText = $('#formattedText').text();
 
-      console.log(formattedText);
-
       navigator.clipboard.writeText(formattedText);
 
     });
 
     $('#clearBtn').on('click', function (e) {
-      clearFields();
+      clearAllFields();
     });
 
-    function clearFields() {
+    function clearAllFields() {
 
       var formattedText = $('#inputText').val("");
+      var formattedText = $('#facebookformattedText').text("");
+      var formattedText = $('#formattedText').text("");
+
+    }
+
+    function clearOnlyFormatedFields() {
+
       var formattedText = $('#facebookformattedText').text("");
       var formattedText = $('#formattedText').text("");
 
@@ -299,7 +332,6 @@
         const textToCopy = this.getAttribute("data-text");
         navigator.clipboard.writeText(textToCopy)
           .then(() => {
-            console.log('Text copied to clipboard:', textToCopy);
           })
           .catch(err => {
             console.error('Failed to copy text:', err);
@@ -309,6 +341,7 @@
       p.appendChild(copyButton);
       document.getElementById("formattedText").appendChild(p);
     }
+
     function appendFacebookCopyBtn(text) {
 
       const p = document.createElement("p");
@@ -321,7 +354,6 @@
         const textToCopy = this.getAttribute("data-text");
         navigator.clipboard.writeText(textToCopy)
           .then(() => {
-            console.log('Text copied to clipboard:', textToCopy);
           })
           .catch(err => {
             console.error('Failed to copy text:', err);
@@ -330,6 +362,46 @@
 
       p.appendChild(copyButton);
       document.getElementById("facebookformattedText").appendChild(p);
+    }
+
+    function cleanPrayerText(text) {
+
+      let phrasesToReplace = [
+        "Father in the name of Jesus",
+        "Thank You Lord",
+        "Holy Spirit",
+        "Christ",
+        "Your Power",
+        "power in the name of Jesus",
+        "COZA global",
+        "coza",
+        "Evangelism",
+        "Soul",
+        " Word ",
+        "Church"
+      ];
+      let replacementPhrases = [
+        "Father in the Name of Jesus",
+        "Thank You Lord",
+        "Holy Spirit",
+        "Christ",
+        "Your Power",
+        "Power in the Name of Jesus",
+        "COZA Global",
+        "COZA",
+        "Evangelism",
+        "Soul",
+        " Word ",
+        "Church"
+      ];
+
+      let sentence = text;
+
+      for (let i = 0; i < phrasesToReplace.length; i++) {
+        let regex = new RegExp(phrasesToReplace[i], "gi");
+        sentence = sentence.replace(regex, replacementPhrases[i]);
+      }
+      return sentence;
     }
 
   })
