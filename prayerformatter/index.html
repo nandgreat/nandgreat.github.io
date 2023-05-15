@@ -150,7 +150,6 @@
 
       console.log(mainScripture);
 
-
       if (type == "scripture") {
 
         var bracketIndex = inputString.indexOf(')');
@@ -165,7 +164,9 @@
       }
 
       console.log(mainScripture);
-      if (mainScripture == undefined) return;
+      if (mainScripture == undefined) {
+        clearFields();
+      };
 
       mainScripture = mainScripture.replace("\"", "");
 
@@ -207,7 +208,7 @@
         } else {
           if (type == "scripture") {
             text = "SCRIPTURE: ..." + element;
-          }else{
+          } else {
             text = "PRAYER: ..." + element;
 
           }
@@ -233,15 +234,16 @@
     });
 
     $('#clearBtn').on('click', function (e) {
+      clearFields();
+    });
 
-      e.preventDefault();
+    function clearFields() {
 
       var formattedText = $('#inputText').val("");
       var formattedText = $('#facebookformattedText').text("");
       var formattedText = $('#formattedText').text("");
-      $('#textCount').html(0)
 
-    });
+    }
 
 
     function splitParagraph(paragraph) {
