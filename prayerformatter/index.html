@@ -183,10 +183,28 @@
 
         var bibleRef = inputString.substr(0, bracketIndex + 1);
 
-        var firstLine = inputString.split('\n')[0];
-        mainScripture = inputString.split('\n')[1];
+        var firstLine = "";
 
+        firstLine = inputString.split('\n')[0];
+
+        const booksOfBibles = getAllBooks();
+
+        var booksOfBible = booksOfBibles.find((el) => firstLine.includes(el))
+        if (booksOfBible && firstLine.includes(":")) {
+          console.log(booksOfBible) // here I want to log 'google' from 'websites'
+          firstLine = inputString.split('\n')[0];
+          mainScripture = inputString.split('\n')[1];
+        } else {
+          firstLine = inputString.split('\n')[1];
+          mainScripture = inputString.split('\n')[0];
+          console.log(firstLine, "reff");
+          console.log(mainScripture, "scriipture");
+        }
+
+      } else {
+        mainScripture = inputString.split('\n')[0];
       }
+
 
       if (mainScripture == undefined) {
         clearAllFields();
@@ -199,9 +217,9 @@
       finalMainScripture = finalMainScripture.trim();
       let finalOutput = "";
       if (type == "scripture") {
-        finalOutput = "SCRIPTURE: " + "\"" + finalMainScripture.trim() + "\"" + " - " + firstLine;
+        finalOutput = finalMainScripture.trim() + "\"" + " - " + firstLine;
       } else {
-        finalOutput = "PRAYER: " + "\"" + finalMainScripture.trim() + "\"";
+        finalOutput = finalMainScripture.trim();
       }
 
       finalOutput = cleanPrayerText(finalOutput);
@@ -230,14 +248,22 @@
 
         let text = "";
 
+        console.log(element + "      ");
 
-        if (index % 2 == 0) {
-          text = element + "...";
+
+        if (index == 0) {
+          // text = element + "...";
+          if (type == "scripture") {
+            text = "SCRIPTURE: " + "\"" + element + "\"";
+          } else {
+            text = "PRAYER: " + "\"" + element  + "\"";
+
+          }
         } else {
           if (type == "scripture") {
-            text = "SCRIPTURE: ..." + element;
+            text = "SCRIPTURE: " + "\"" + "..." + element + "\"";
           } else {
-            text = "PRAYER: ..." + element;
+            text = "PRAYER: " + "\"" + "..." + element + "\"";
 
           }
         }
@@ -402,6 +428,77 @@
         sentence = sentence.replace(regex, replacementPhrases[i]);
       }
       return sentence;
+    }
+
+    function getAllBooks() {
+      return [
+        "Genesis",
+        "Exodus",
+        "Leviticus",
+        "Numbers",
+        "Deuteronomy",
+        "Joshua",
+        "Judges",
+        "Ruth",
+        "1 Samuel",
+        "2 Samuel",
+        "1 Kings",
+        "2 Kings",
+        "1 Chronicles",
+        "2 Chronicles",
+        "Ezra",
+        "Nehemiah",
+        "Esther",
+        "Job",
+        "Psalms",
+        "Proverbs",
+        "Ecclesiastes",
+        "Song of Solomon",
+        "Isaiah",
+        "Jeremiah",
+        "Lamentations",
+        "Ezekiel",
+        "Daniel",
+        "Hosea",
+        "Joel",
+        "Amos",
+        "Obadiah",
+        "Jonah",
+        "Micah",
+        "Nahum",
+        "Habakkuk",
+        "Zephaniah",
+        "Haggai",
+        "Zechariah",
+        "Malachi",
+        "Matthew",
+        "Mark",
+        "Luke",
+        "John",
+        "Acts",
+        "Romans",
+        "1 Corinthians",
+        "2 Corinthians",
+        "Galatians",
+        "Ephesians",
+        "Philippians",
+        "Colossians",
+        "1 Thessalonians",
+        "2 Thessalonians",
+        "1 Timothy",
+        "2 Timothy",
+        "Titus",
+        "Philemon",
+        "Hebrews",
+        "James",
+        "1 Peter",
+        "2 Peter",
+        "1 John",
+        "2 John",
+        "3 John",
+        "Jude",
+        "Revelation"
+      ];
     }
 
   })
