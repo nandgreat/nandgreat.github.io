@@ -171,9 +171,11 @@
 
       clearOnlyFormatedFields();
 
-      var inputString = e.target.value;
+      var inputString = e.target.value.trim();
 
       var mainScripture = inputString;
+
+      let typeTxt = type == "scripture" ? "SCRIPTURE: " : "PRAYER: ";
 
       if (type == "scripture") {
 
@@ -191,14 +193,11 @@
 
         var booksOfBible = booksOfBibles.find((el) => firstLine.includes(el))
         if (booksOfBible && firstLine.includes(":")) {
-          console.log(booksOfBible) // here I want to log 'google' from 'websites'
           firstLine = inputString.split('\n')[0];
           mainScripture = inputString.split('\n')[1];
         } else {
           firstLine = inputString.split('\n')[1];
           mainScripture = inputString.split('\n')[0];
-          console.log(firstLine, "reff");
-          console.log(mainScripture, "scriipture");
         }
 
       } else {
@@ -217,30 +216,31 @@
       finalMainScripture = finalMainScripture.trim();
       let finalOutput = "";
       if (type == "scripture") {
-        finalOutput = finalMainScripture.trim() + "\"" + " - " + firstLine;
+        finalOutput = "\"" + finalMainScripture.trim() + "\"" + " - " + firstLine.replace("\"", "");
       } else {
-        finalOutput = finalMainScripture.trim();
+        finalOutput = "\"" + finalMainScripture.trim().replace("\"", "");
       }
 
       finalOutput = cleanPrayerText(finalOutput);
 
-      console.log(finalOutput);
-
       var bracketIndex = inputString.indexOf('.');
 
-      appendFacebookCopyBtn(finalOutput);
-
+      appendFacebookCopyBtn(typeTxt + finalOutput);
 
       // $('#facebookformattedText').html(finalOutput)
-      // console.log("length " + finalOutput.length);
 
       // $('#formattedText').text(finalOutput);
+
+      finalOutput = finalOutput.replace("\"", "");
+
 
       var splittedParagraph = new Array();
       splittedParagraph = splitParagraph(finalOutput);
 
       if (splittedParagraph.length == 1) {
-        appendCopyBtn(splittedParagraph[0]);
+        console.log(splittedParagraph[0].length + "      ");
+
+        appendCopyBtn(typeTxt + splittedParagraph[0]);
         return;
       }
 
@@ -248,15 +248,22 @@
 
         let text = "";
 
-        console.log(element + "      ");
+        console.log(element.length + "      ");
 
 
         if (index == 0) {
           // text = element + "...";
           if (type == "scripture") {
-            text = "SCRIPTURE: " + "\"" + element + "\"";
+            text = "SCRIPTURE: " + "\"" + element + "...\"";
           } else {
-            text = "PRAYER: " + "\"" + element  + "\"";
+            text = "PRAYER: " + "\"" + element + "...\"";
+
+          }
+        } else if (index == splittedParagraph.length - 1) {
+          if (type == "scripture") {
+            text = "SCRIPTURE: " + "\"" + "..." + element;
+          } else {
+            text = "PRAYER: " + "\"" + "..." + element + "\"";
 
           }
         } else {
