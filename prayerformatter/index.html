@@ -190,6 +190,7 @@
         firstLine = inputString.split('\n')[0];
 
         const booksOfBibles = getAllBooks();
+        
 
         var booksOfBible = booksOfBibles.find((el) => firstLine.includes(el))
         if (booksOfBible && firstLine.includes(":")) {
@@ -216,23 +217,22 @@
       finalMainScripture = finalMainScripture.trim();
       let finalOutput = "";
       if (type == "scripture") {
-        finalOutput = "\"" + finalMainScripture.trim() + "\"" + " - " + firstLine.replace("\"", "");
+        finalOutput = "SCRIPTURE: " + "\"" + finalMainScripture.trim() + "\"" + " - " + firstLine.replace("\"", "");
       } else {
-        finalOutput = "\"" + finalMainScripture.trim().replace("\"", "");
+        finalOutput = "PRAYER: " + "\"" + finalMainScripture.trim().replace("\"", "");
       }
 
       finalOutput = cleanPrayerText(finalOutput);
 
       var bracketIndex = inputString.indexOf('.');
 
-      appendFacebookCopyBtn(typeTxt + finalOutput);
+      appendFacebookCopyBtn(finalOutput);
 
       // $('#facebookformattedText').html(finalOutput)
 
       // $('#formattedText').text(finalOutput);
 
-      finalOutput = finalOutput.replace("\"", "");
-
+      finalOutput = finalOutput;
 
       var splittedParagraph = new Array();
       splittedParagraph = splitParagraph(finalOutput);
@@ -240,7 +240,7 @@
       if (splittedParagraph.length == 1) {
         console.log(splittedParagraph[0].length + "      ");
 
-        appendCopyBtn(typeTxt + splittedParagraph[0]);
+        appendCopyBtn(splittedParagraph[0]);
         return;
       }
 
@@ -250,13 +250,11 @@
 
         console.log(element.length + "      ");
 
-
         if (index == 0) {
-          // text = element + "...";
           if (type == "scripture") {
-            text = "SCRIPTURE: " + "\"" + element + "...\"";
+            text = element + "...\"";
           } else {
-            text = "PRAYER: " + "\"" + element + "...\"";
+            text = element + "...\"";
 
           }
         } else if (index == splittedParagraph.length - 1) {
@@ -313,7 +311,7 @@
 
 
     function splitParagraph(paragraph) {
-      const maxLength = 195;
+      const maxLength = 185;
       const words = paragraph.split(' ');
       const chunks = [];
       let currentChunk = '';
