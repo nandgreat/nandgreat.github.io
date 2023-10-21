@@ -85,7 +85,6 @@
                 <p>Format Prayers to COZA Standard </p>
               </div>
             </div>
-
           </div>
 
           <div class="col-lg-8 mt-5 mt-lg-0 ">
@@ -164,7 +163,6 @@
       $('.email').addClass('activeTab');
       $('.address').removeClass('activeTab');
       $('#typeLabel').text('Paste Prayer')
-
     })
 
     $('#inputText').on('input', function (e) {
@@ -190,7 +188,7 @@
         firstLine = inputString.split('\n')[0];
 
         const booksOfBibles = getAllBooks();
-        
+
 
         var booksOfBible = booksOfBibles.find((el) => firstLine.includes(el))
         if (booksOfBible && firstLine.includes(":")) {
@@ -219,7 +217,7 @@
       if (type == "scripture") {
         finalOutput = "SCRIPTURE: " + "\"" + finalMainScripture.trim() + "\"" + " - " + firstLine.replace("\"", "");
       } else {
-        finalOutput = "PRAYER: " + "\"" + finalMainScripture.trim().replace("\"", "");
+        finalOutput = "PRAYER: " + finalMainScripture.trim().replace("\"", "");
       }
 
       finalOutput = cleanPrayerText(finalOutput);
@@ -233,6 +231,8 @@
       // $('#formattedText').text(finalOutput);
 
       finalOutput = finalOutput;
+
+      console.log(finalOutput);
 
       var splittedParagraph = new Array();
       splittedParagraph = splitParagraph(finalOutput);
@@ -261,14 +261,14 @@
           if (type == "scripture") {
             text = "SCRIPTURE: " + "\"" + "..." + element;
           } else {
-            text = "PRAYER: " + "\"" + "..." + element + "\"";
+            text = "PRAYER: ..." + element;
 
           }
         } else {
           if (type == "scripture") {
             text = "SCRIPTURE: " + "\"" + "..." + element + "\"";
           } else {
-            text = "PRAYER: " + "\"" + "..." + element + "\"";
+            text = "PRAYER: ..." + element;
 
           }
         }
@@ -411,6 +411,7 @@
         " Word ",
         "Church"
       ];
+ 
       let replacementPhrases = [
         "Father in the Name of Jesus",
         "Thank You Lord",
@@ -447,10 +448,16 @@
         "Ruth",
         "1 Samuel",
         "2 Samuel",
+        "I Samuel",
+        "II Samuel",
         "1 Kings",
         "2 Kings",
+        "I Kings",
+        "II Kings",
         "1 Chronicles",
         "2 Chronicles",
+        "I Chronicles",
+        "II Chronicles",
         "Ezra",
         "Nehemiah",
         "Esther",
@@ -484,23 +491,34 @@
         "Romans",
         "1 Corinthians",
         "2 Corinthians",
+        "I Corinthians",
+        "II Corinthians",
         "Galatians",
         "Ephesians",
         "Philippians",
         "Colossians",
         "1 Thessalonians",
         "2 Thessalonians",
+        "I Thessalonians",
+        "II Thessalonians",
         "1 Timothy",
         "2 Timothy",
+        "I Timothy",
+        "II Timothy",
         "Titus",
         "Philemon",
         "Hebrews",
         "James",
         "1 Peter",
         "2 Peter",
+        "I Peter",
+        "II Peter",
         "1 John",
         "2 John",
         "3 John",
+        "I John",
+        "II John",
+        "III John",
         "Jude",
         "Revelation"
       ];
