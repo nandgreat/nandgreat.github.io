@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Prayer and Scripture formatter</title>
+  <title>User JSON Extractor</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -66,28 +66,13 @@
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-          <h2>PRAYER AND SCRIPTURE FORMATTER</h2>
+          <h2>User JSON Extractor</h2>
         </div>
 
         <div class="row">
 
-          <div class="col-lg-4 d-flex align-items-stretch">
-            <div class="info" style="padding-left: 0; padding-right: 0;">
-              <div class="address tabStyle activeTab">
-                <i class="bi bi-book"></i>
-                <h4><a href="#" id="scriptureLink">SCRIPTURE</a></h4>
-                <p>Format scripture to COZA standard</p>
-              </div>
 
-              <div class="email tabStyle">
-                <i class="bi bi-book"></i>
-                <h4><a href="#" id="prayerLink">PRAYER</a></h4>
-                <p>Format Prayers to COZA Standard </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-8 mt-5 mt-lg-0 ">
+          <div class="col-lg-12 mt-5 mt-lg-0 ">
             <div class="form-group" style="width: 100%;">
               <div class="row" style="justify-content: space-between;">
                 <label style="width: 400px;" for="name"><b><span id="typeLabel">Paste Scripture</span></b></label>
@@ -173,109 +158,23 @@
 
       var mainScripture = inputString;
 
-      let typeTxt = type == "scripture" ? "SCRIPTURE: " : "PRAYER: ";
-
-      if (type == "scripture") {
-
-        var bracketIndex = inputString.indexOf(')');
-
-        mainScripture = inputString.substr(bracketIndex + 1);
-
-        var bibleRef = inputString.substr(0, bracketIndex + 1);
-
-        var firstLine = "";
-
-        firstLine = inputString.split('\n')[0];
-
-        const booksOfBibles = getAllBooks();
-
-
-        var booksOfBible = booksOfBibles.find((el) => firstLine.includes(el))
-        if (booksOfBible && firstLine.includes(":")) {
-          firstLine = inputString.split('\n')[0];
-          mainScripture = inputString.split('\n')[1];
-        } else {
-          firstLine = inputString.split('\n')[1];
-          mainScripture = inputString.split('\n')[0];
-        }
-
-      } else {
-        mainScripture = inputString.split('\n')[0];
-      }
-
 
       if (mainScripture == undefined) {
         clearAllFields();
       };
+      
 
-      mainScripture = mainScripture.replace("\"", "");
-
-      let finalMainScripture = mainScripture.replace(/[“”‘’]/g, '');
-
-      finalMainScripture = finalMainScripture.trim();
-      let finalOutput = "";
-      if (type == "scripture") {
-        finalOutput = "SCRIPTURE: " + "\"" + finalMainScripture.trim() + "\"" + " - " + firstLine.replace("\"", "");
-      } else {
-        finalOutput = "PRAYER: " + finalMainScripture.trim().replace("\"", "");
-      }
-
-      finalOutput = cleanPrayerText(finalOutput);
+      let finalOutput = transformUserData(JSON.parse(inputString));
 
       var bracketIndex = inputString.indexOf('.');
 
-      appendFacebookCopyBtn(finalOutput);
-
-      // $('#facebookformattedText').html(finalOutput)
-
-      // $('#formattedText').text(finalOutput);
+      appendFacebookCopyBtn(JSON.stringify(finalOutput));
 
       finalOutput = finalOutput;
 
       console.log(finalOutput);
 
-      var splittedParagraph = new Array();
-      splittedParagraph = anotherSplitParagraph(finalOutput);
-
-      if (splittedParagraph.length == 1) {
-        console.log(splittedParagraph[0].length + "      ");
-
-        appendCopyBtn(splittedParagraph[0]);
         return;
-      }
-
-      splittedParagraph.forEach((element, index) => {
-
-        let text = "";
-
-        console.log(element.length + "      ");
-
-        if (index == 0) {
-          if (type == "scripture") {
-            text = element + "...\"";
-          } else {
-            text = element + "...\"";
-
-          }
-        } else if (index == splittedParagraph.length - 1) {
-          if (type == "scripture") {
-            text = "SCRIPTURE: " + "\"" + "..." + element;
-          } else {
-            text = "PRAYER: ..." + element;
-
-          }
-        } else {
-          if (type == "scripture") {
-            text = "SCRIPTURE: " + "\"" + "..." + element + "\"";
-          } else {
-            text = "PRAYER: ..." + element;
-
-          }
-        }
-
-        appendCopyBtn(text);
-
-      });
 
     })
 
@@ -455,7 +354,7 @@
         " Word ",
         "Church"
       ];
- 
+
       let replacementPhrases = [
         "Father in the Name of Jesus",
         "Thank You Lord",
@@ -478,6 +377,25 @@
         sentence = sentence.replace(regex, replacementPhrases[i]);
       }
       return sentence;
+    }
+
+
+    function transformUserData(rawData) {
+
+
+      return rawData.data.map((entry) => {
+        // Extract image src from the <img> tag
+        const imageMatch = entry[0].match(/<img\s+[^>]*src=['"]([^'"]+)['"]/i);
+        const imageSrc = imageMatch && imageMatch[1] ? imageMatch[1] : "";
+
+        return {
+          image: imageSrc.startsWith("http") ? imageSrc : `https://partners.coza.org.ng${imageSrc}`,
+          first_name: entry[1] || "",
+          last_name: entry[2] || "",
+          email: entry[3] || "",
+          date_joined: entry[5] || "",
+        };
+      });
     }
 
     function getAllBooks() {
